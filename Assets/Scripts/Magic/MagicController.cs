@@ -1,9 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MagicController : MonoBehaviour
-{ 
+{
+    [SerializeField] private float m_CoolDown;
     [SerializeField] private Magic[] m_RightButtonMagics;
     [SerializeField] private Magic[] m_LeftButtonMagics;
 
@@ -11,34 +11,32 @@ public class MagicController : MonoBehaviour
     private Magic currentRightButtonMagic;
     private Magic currentLeftButtonMagic;
 
-    private bool isRightButtonMagic;
-    private bool isLeftButtonMagic;
+    private bool isCoolDawn;
     private void Start()
     {
         SwapMagicType(MagicType.Wind);
     }
     public void UseRightButtonMagic()
     {
-        if (isLeftButtonMagic) return;
-        isRightButtonMagic = true;
+        if (isCoolDawn) return;
+        StartCoroutine(CoolDown(currentRightButtonMagic.MagicDuration));
         currentRightButtonMagic.UseMagic();
     }
     public void UseLeftButtonMagic()
     {
-        if (isRightButtonMagic) return;
-        isLeftButtonMagic = true;
+        if (isCoolDawn) return;
+        StartCoroutine(CoolDown(currentLeftButtonMagic.MagicDuration));
         currentLeftButtonMagic.UseMagic();
     }
 
     public void LeftButtonMagicReset()
     {
         currentLeftButtonMagic.MagicReset();
-        isLeftButtonMagic = false;
+        
     }
     public void RightButtonMagicReset()
     {
         currentRightButtonMagic.MagicReset();
-        isRightButtonMagic = false;
     }
     public void SwapMagicType(MagicType type)
     {
@@ -58,5 +56,15 @@ public class MagicController : MonoBehaviour
                 currentLeftButtonMagic = m_LeftButtonMagics[i];
             }
         }
+    }
+
+    private IEnumerator CoolDown(float magicDuration)
+    {
+        isCoolDawn = true;
+        yield return new WaitForSeconds(magicDuration);
+        LeftButtonMagicReset();
+        RightButtonMagicReset();
+        yield return new WaitForSeconds(m_CoolDown );
+        isCoolDawn = false;
     }
 }

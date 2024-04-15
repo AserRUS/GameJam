@@ -27,23 +27,18 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Jump")]
     [SerializeField] private float m_JumpForce;
-    [SerializeField] private int m_MaxJumpCount;
     [SerializeField] private float m_StunTime;
 
     private float m_DistanceToGround;  
     private int direction = 1;
-    private int jumpCount;
     private bool isGround;
+    private bool isWater;
     private bool isMove;
     private bool isRotation;
     private bool isStun;
     private Vector3 targetRotation;
     private RaycastHit hit;
 
-    private void Start()
-    {
-        jumpCount = m_MaxJumpCount;
-    }
 
     private void Update()
     {
@@ -57,6 +52,21 @@ public class PlayerMovement : MonoBehaviour
         Rotation();
     }
 
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.GetComponent<Water>() != null)
+        {
+            isWater = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.transform.GetComponent<Water>() != null)
+        {
+            isWater = false;
+        }
+    }
     private void CheckGround()
     {  
         m_DistanceToGround = 100;
@@ -76,10 +86,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (m_DistanceToGround <= m_RayDistance)
         {
-            if (isGround == false)
-            {
-                jumpCount = m_MaxJumpCount;
-            }
             isGround = true;
         }
         else
@@ -92,10 +98,7 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawRay(transform.position + new Vector3(-m_RayOffset.x, m_RayOffset.y, m_RayOffset.z), -Vector2.up * m_RayDistance, Color.yellow);
     }
 
-    private bool CheckJumpOpportunity()
-    {
-        return Physics.Raycast(transform.position, transform.up, m_RayDistance, m_LayerMask);
-    }
+    
 
 
     private void Movement()
@@ -126,15 +129,12 @@ public class PlayerMovement : MonoBehaviour
     public void Jump()
     {
         if (isStun == true) return;
-        if (jumpCount == 0) return;
-        if (isGround == false) return;
-        if (CheckJumpOpportunity() == true) return;             
+        if (isGround || isWater)
+        {
+            m_Rigidbody.AddForce(transform.up * m_JumpForce, ForceMode.Impulse);
+            OnJumpEvent?.Invoke();
+        }                 
         
-        m_Rigidbody.AddForce(transform.up * m_JumpForce, ForceMode.Impulse);
-
-        jumpCount--;
-
-        OnJumpEvent?.Invoke();
     }
 
     private void Resistance()

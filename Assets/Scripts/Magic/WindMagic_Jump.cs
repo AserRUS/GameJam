@@ -1,48 +1,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class WindMagic_Jump : Magic
 {
     public override MagicType MagicType => m_MagicType;
+    public override float MagicDuration => m_MagicDuration;
 
     [SerializeField] private MagicType m_MagicType;
-
-    [SerializeField] private Rigidbody m_TargetRigidbody;
-    [SerializeField] private float m_JumpHeight;
+    [SerializeField] private float m_MagicDuration;
+    [SerializeField] private Transform m_PlayerTransform;
     [SerializeField] private float m_JumpForce;
     [SerializeField] private ParticleSystem m_WindEffect;
     [SerializeField] private LayerMask m_LayerMask;
 
-    private float distanceToGround;
+
+    private List<Rigidbody> objects = new List<Rigidbody>();
     private RaycastHit hit;
     private void Update()
     {
-        if (Physics.Raycast(transform.position, -transform.up, out hit, 100, m_LayerMask) == true)
+        if ( Physics.Raycast(m_PlayerTransform.position, -transform.up, out hit, 100, m_LayerMask)) 
         {
-            distanceToGround = Vector3.Distance(transform.position, hit.point);
-            m_WindEffect.transform.position = hit.point;
-        }
-        else
-        {
-            distanceToGround = 100;
-        }
+            transform.position = hit.point;
+        }     
     }
 
     private void FixedUpdate()
     {
-        m_TargetRigidbody.AddForce(Vector3.up * m_JumpForce);// * (Mathf.Abs(m_TargetRigidbody.DistanceToGround - m_JumpHeight) / m_JumpHeight));
-        m_TargetRigidbody.AddForce((-Vector3.up * m_JumpForce) * (distanceToGround / m_JumpHeight));
+        for (int i = 0; i < objects.Count; i++)
+        {
+            objects[i].AddForce(Vector3.up * m_JumpForce, ForceMode.Acceleration);
+        }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Rigidbody rigidbody = other.GetComponent<Rigidbody>();
+        if (rigidbody == null) return;
+        objects.Add(rigidbody);
+
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        Rigidbody rigidbody = other.GetComponent<Rigidbody>();
+        if (rigidbody == null) return;
+
+        if (objects.Contains(rigidbody))
+        {
+            objects.Remove(rigidbody);
+        }
+    }
+
     public override void UseMagic()
     {
         m_WindEffect.Play();
-        m_TargetRigidbody.drag = 1;
         enabled = true;
     }
     public override void MagicReset()
     {
         m_WindEffect.Stop();
-        m_TargetRigidbody .drag = 0;
         enabled = false;
     }
 }

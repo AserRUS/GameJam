@@ -26,14 +26,6 @@ public class PlayerInputControl : MonoBehaviour
             {                
                 m_MagicController.UseRightButtonMagic();
             }
-            if (Input.GetKeyUp(KeyCode.Mouse0))
-            {
-                m_MagicController.LeftButtonMagicReset();
-            }
-            if (Input.GetKeyUp(KeyCode.Mouse1))
-            {
-                m_MagicController.RightButtonMagicReset();
-            }
         }
 
     }

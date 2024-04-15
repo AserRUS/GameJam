@@ -5,10 +5,14 @@ using UnityEngine;
 public class WindMagic_Airflow : Magic
 {
     public override MagicType MagicType => m_MagicType;
+    public override float MagicDuration => m_MagicDuration;
 
     [SerializeField] private MagicType m_MagicType;
+
+    [SerializeField] private float m_MagicDuration;
     [SerializeField] private float m_AirflowForce;
     [SerializeField] private ParticleSystem m_WindEffect;
+    [SerializeField] private Transform m_PlayerTransform;
 
     private List<Rigidbody> objects = new List<Rigidbody>();
 
@@ -22,6 +26,7 @@ public class WindMagic_Airflow : Magic
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.transform == m_PlayerTransform) return;
         Rigidbody rigidbody = other.GetComponent<Rigidbody>();
         if (rigidbody == null) return;
         objects.Add(rigidbody);
@@ -45,6 +50,8 @@ public class WindMagic_Airflow : Magic
 
     public override void UseMagic()
     {
+        transform.position = m_PlayerTransform.position;
+        transform.rotation = m_PlayerTransform.rotation;
         m_WindEffect.Play();
         enabled = true;
     }

@@ -8,6 +8,7 @@ public enum MagicType
 public abstract class Magic : MonoBehaviour
 {
     public abstract MagicType MagicType { get;}
+    public abstract float MagicDuration { get;}
     public abstract void UseMagic();
     public abstract void MagicReset();
 }
