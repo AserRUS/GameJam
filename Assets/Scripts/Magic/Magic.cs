@@ -1,4 +1,5 @@
 using UnityEngine;
+
 public enum MagicType
 {
     Wind,
@@ -7,6 +8,8 @@ public enum MagicType
 }
 public abstract class Magic : MonoBehaviour
 {
+    public abstract float CoolDown { get; }
+    public abstract Sprite MagicImage { get;}
     public abstract MagicType MagicType { get;}
     public abstract float MagicDuration { get;}
     public abstract void UseMagic();

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class RainMagic_HavyRain : RainMagic_Rain
 {
+
     [SerializeField] private float m_WaterFillingSpeed;
     
     private List<Water> waterList = new List<Water>();

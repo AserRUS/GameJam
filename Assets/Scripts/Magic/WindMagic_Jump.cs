@@ -1,12 +1,19 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider))]
 public class WindMagic_Jump : Magic
 {
     public override MagicType MagicType => m_MagicType;
     public override float MagicDuration => m_MagicDuration;
+    public override Sprite MagicImage => m_MagicImage;
 
+    public override float CoolDown => m_CoolDown;
+
+    [SerializeField] private float m_CoolDown = 2f;
+    [SerializeField] private Sprite m_MagicImage;
     [SerializeField] private MagicType m_MagicType;
     [SerializeField] private float m_MagicDuration;
     [SerializeField] private Transform m_PlayerTransform;
@@ -54,11 +61,18 @@ public class WindMagic_Jump : Magic
     public override void UseMagic()
     {
         m_WindEffect.Play();
+        StartCoroutine(MagicTimer());
         enabled = true;
     }
     public override void MagicReset()
     {
         m_WindEffect.Stop();
         enabled = false;
+    }
+
+    private IEnumerator MagicTimer()
+    {
+        yield return new WaitForSeconds(MagicDuration);
+        MagicReset();
     }
 }

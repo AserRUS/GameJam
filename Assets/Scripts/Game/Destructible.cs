@@ -41,8 +41,7 @@ public class Destructible : MonoBehaviour
         HitPointChangeEvent?.Invoke(currentHitPoints);
 
         if (currentHitPoints == 0)
-        {            
-            DeathEvent?.Invoke();
+        {  
             Death();
         }
     }
@@ -56,11 +55,12 @@ public class Destructible : MonoBehaviour
         }
         HitPointChangeEvent?.Invoke(currentHitPoints);
     }
-
+    
     protected virtual void Death()
     {
+        DeathEvent?.Invoke();
         if (m_DeathEffect != null)
             Instantiate (m_DeathEffect, transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

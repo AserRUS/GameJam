@@ -26,7 +26,13 @@ public class PlayerInputControl : MonoBehaviour
             {                
                 m_MagicController.UseRightButtonMagic();
             }
+
+            if (Input.GetKeyDown(KeyCode.Alpha1) == true) m_MagicController.SwapMagicType(MagicType.Sun);
+            if (Input.GetKeyDown(KeyCode.Alpha2) == true) m_MagicController.SwapMagicType(MagicType.Wind);
+            if (Input.GetKeyDown(KeyCode.Alpha3) == true) m_MagicController.SwapMagicType(MagicType.Rain);
         }
+
+
 
     }
     private void FixedUpdate()
