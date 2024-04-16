@@ -169,8 +169,9 @@ public class PlayerMovement : MonoBehaviour
         this.isMove = isMove;
     }
     public void Stun()
-    {        
-        StartCoroutine(StunTimer());
+    {     
+        if (gameObject.activeSelf == true)
+            StartCoroutine(StunTimer());
     }
     private IEnumerator StunTimer()
     {

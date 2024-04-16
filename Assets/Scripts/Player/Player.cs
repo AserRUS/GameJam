@@ -2,17 +2,12 @@ using UnityEngine;
 
 public class Player : Destructible
 {
-    
-
-    protected override void Start()
+    [SerializeField] private PlayerInputControl m_PlayerInputControl;
+    protected override void Death()
     {
-        base.Start();
+        m_PlayerInputControl.enabled = false;
+        base.Death();
+
     }
 
-    public override void RemoveHitpoints(int value)
-    {
-        base.RemoveHitpoints(value);
-    }
-
-   
 }
