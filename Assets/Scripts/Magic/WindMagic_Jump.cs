@@ -13,19 +13,16 @@ public class WindMagic_Jump : Magic
     [SerializeField] private MagicType m_MagicType;
     [SerializeField] private float m_MagicDuration;
     [SerializeField] private Rigidbody m_Player;
+    [SerializeField] private PlayerMovement m_PlayerMovement;
     [SerializeField] private float m_JumpForce;
     [SerializeField] private ParticleSystem m_WindEffect;
     [SerializeField] private LayerMask m_LayerMask;
 
 
-    private RaycastHit hit;
 
     private void Update()
-    {
-        if ( Physics.Raycast(m_Player.transform.position, -transform.up, out hit, 100, m_LayerMask)) 
-        {
-            transform.position = hit.point;
-        }     
+    {        
+        transform.position = m_Player.transform.position;           
     }
 
     private void FixedUpdate()
@@ -37,8 +34,10 @@ public class WindMagic_Jump : Magic
 
     public override void UseMagic()
     {
+        m_Player.velocity = new Vector3(m_Player.velocity.x, 0, m_Player.velocity.z);
         m_WindEffect.Play();
         StartCoroutine(MagicTimer());
+        m_PlayerMovement.Stun();
         enabled = true;
     }
     public override void MagicReset()

@@ -60,4 +60,9 @@ public class Water : MonoBehaviour
     {
         m_WaterLevel = Mathf.MoveTowards(m_WaterLevel, m_MaxWaterLevel, waterFillingSpeed * Time.deltaTime);
     }
+
+    public void RemoveWater(float waterEvaporationSpeed)
+    {
+        m_WaterLevel = Mathf.MoveTowards(m_WaterLevel, 0, waterEvaporationSpeed * Time.deltaTime);
+    }
 }

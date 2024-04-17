@@ -103,7 +103,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void Movement()
     {
-        if (isStun == true) return;
         if (isMove == false) return;
         
         if (isGround)

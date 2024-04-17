@@ -18,6 +18,7 @@ public class WindMagic_Airflow : Magic
     [SerializeField] private float m_AirflowForce;
     [SerializeField] private ParticleSystem m_WindEffect;
     [SerializeField] private Transform m_PlayerTransform;
+    [SerializeField] private Collider m_Collider;
 
     private List<Rigidbody> objects = new List<Rigidbody>();
 
@@ -49,17 +50,18 @@ public class WindMagic_Airflow : Magic
     }
     public override void MagicReset()
     {
-        m_WindEffect.Stop();        
-        enabled = false;
+        m_WindEffect.Stop();
+        objects.Clear();
+        m_Collider.enabled = false;
     }
 
     public override void UseMagic()
     {
         transform.position = m_PlayerTransform.position;
         transform.rotation = m_PlayerTransform.rotation;
+        m_Collider.enabled = true;
         m_WindEffect.Play();
         StartCoroutine(MagicTimer());
-        enabled = true;
     }
 
     private IEnumerator MagicTimer()

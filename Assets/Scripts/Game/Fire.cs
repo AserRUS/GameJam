@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -7,26 +5,74 @@ public class Fire : MonoBehaviour
 {
     [SerializeField] private int m_Damage;
     [SerializeField] private float impactForce;
+    [SerializeField][Range(0, 1)] private float m_FireLevel;
+    [SerializeField] private float m_MaxRateOverTime;
+    [SerializeField] private float m_MaxLifeTime;
+    [SerializeField] private ParticleSystem m_FireParticleSystem;
+    [SerializeField] private ParticleSystem m_SmokeParticleSystem;
+    [SerializeField] private ParticleSystem m_SteamParticleSystem;
+    [SerializeField] private Collider m_Collider;
+    [SerializeField] private float m_FireCoolDown;
 
-    private void OnTriggerEnter(Collider other)
+    private float fireCoolDownTimer;
+    private void Update()
     {
-        Player player = other.GetComponent<Player>();
+        var startLifetime = m_FireParticleSystem.main;
+        startLifetime.startLifetime = Mathf.MoveTowards(0, m_MaxLifeTime, m_FireLevel * (m_MaxLifeTime - 0));
+        var rateOverTime = m_FireParticleSystem.emission;
+        rateOverTime.rateOverTime = Mathf.MoveTowards(0, m_MaxRateOverTime, m_FireLevel * (m_MaxRateOverTime - 0));
+        m_Collider.enabled = !(m_FireLevel <= 0.1);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Damage(collision);
+        fireCoolDownTimer = m_FireCoolDown;
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        if (fireCoolDownTimer > 0)
+        {
+            fireCoolDownTimer -= Time.deltaTime;
+        }
+        else
+        {
+            fireCoolDownTimer = m_FireCoolDown;
+            Damage(collision);
+        }
+    }
+
+    private void Damage(Collision collision)
+    {
+        Player player = collision.transform.GetComponent<Player>();
         if (player == null) return;
 
         player.RemoveHitpoints(m_Damage);
 
-        PlayerMovement playerMovement = other.transform.GetComponent<PlayerMovement>();
+        PlayerMovement playerMovement = collision.transform.GetComponent<PlayerMovement>();
         if (playerMovement != null)
         {
             playerMovement.Stun();
         }
 
-        Rigidbody rb = other.transform.GetComponent<Rigidbody>();
+        Rigidbody rb = collision.transform.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.velocity = Vector3.zero;
-            Vector3 direction = other.transform.position - transform.position;            
-            rb.AddForce(direction * impactForce, ForceMode.Impulse);            
+            Vector3 direction = (rb.transform.position - transform.position).normalized;
+            rb.AddForce(direction * impactForce, ForceMode.Impulse);
         }
+    }
+    
+    public void StartReducingFire()
+    {
+        m_SmokeParticleSystem.Stop();
+        m_SteamParticleSystem.Play();
+    }
+
+    public void ReducingFire(float fireReducingSpeed)
+    {
+        StartReducingFire();
+        m_FireLevel = Mathf.MoveTowards(m_FireLevel, 0, fireReducingSpeed * Time.deltaTime);
     }
 }

@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider))]
-public class RainMagic_Rain : Magic
+public class SunMagic_Sun : Magic
 {
     public override MagicType MagicType => m_MagicType;
     public override float MagicDuration => m_MagicDuration;
@@ -16,44 +15,42 @@ public class RainMagic_Rain : Magic
     [SerializeField] private Sprite m_MagicImage;
     [SerializeField] private MagicType m_MagicType;
     [SerializeField] private float m_MagicDuration;
-    [SerializeField] private ParticleSystem m_RainEffect;
+    [SerializeField] private ParticleSystem m_SunEffect;
     [SerializeField] private Transform m_PlayerTransform;
-    [SerializeField] private float m_FireReducingSpeed;
     [SerializeField] private Collider m_Collider;
 
-    private List<Fire> fireList = new List<Fire>();
+    private List<Rope> ropeList = new List<Rope>();
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        Fire fire = other.GetComponent<Fire>();
-        if (fire != null)
+        Rope rope = other.transform.root.GetComponent<Rope>();        
+        if (rope != null)
         {
-            fireList.Add(fire);
+            rope.LightTheRope();
+            ropeList.Add(rope);
         }
     }
 
     protected virtual void OnTriggerExit(Collider other)
     {
-        Fire fire = other.GetComponent<Fire>();
-        if (fire == null) return;
+        Rope rope = other.GetComponent<Rope>();
+        if (rope == null) return;
 
-        if (fireList.Contains(fire))
+        if (ropeList.Contains(rope))
         {
-            fireList.Remove(fire);
+            ropeList.Remove(rope);
         }
     }
 
-    protected virtual void Update()
-    {
-        for (int i = 0; i < fireList.Count; i++)
-        {
-            fireList[i].ReducingFire(m_FireReducingSpeed);
-        }
-    }
+   
     public override void MagicReset()
     {
-        m_RainEffect.Stop();
-        fireList.Clear();
+        //m_SunEffect.Stop();
+        for (int i = 0; i < ropeList.Count; i++)
+        {
+            ropeList[i].RopeDestroy();
+        }
+        ropeList.Clear();
         m_Collider.enabled = false;
     }
 
@@ -61,8 +58,8 @@ public class RainMagic_Rain : Magic
     {
         transform.position = new Vector3(m_PlayerTransform.position.x, transform.position.y, m_PlayerTransform.position.z);
         m_Collider.enabled = true;
-        m_RainEffect.Play();
-        StartCoroutine(MagicTimer());     
+        // m_SunEffect.Play();
+        StartCoroutine(MagicTimer());
     }
     private IEnumerator MagicTimer()
     {
