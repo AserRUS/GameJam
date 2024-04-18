@@ -20,9 +20,11 @@ public class RainMagic_Rain : Magic
     [SerializeField] private Transform m_PlayerTransform;
     [SerializeField] private float m_FireReducingSpeed;
     [SerializeField] private Collider m_Collider;
+    [SerializeField] private SoundController m_SoundController;
 
     private List<Fire> fireList = new List<Fire>();
 
+    
     protected virtual void OnTriggerEnter(Collider other)
     {
         Fire fire = other.GetComponent<Fire>();
@@ -52,6 +54,7 @@ public class RainMagic_Rain : Magic
     }
     public override void MagicReset()
     {
+        m_SoundController.Stop();
         m_RainEffect.Stop();
         fireList.Clear();
         m_Collider.enabled = false;
@@ -59,6 +62,7 @@ public class RainMagic_Rain : Magic
 
     public override void UseMagic()
     {
+        m_SoundController.Play();
         transform.position = new Vector3(m_PlayerTransform.position.x, transform.position.y, m_PlayerTransform.position.z);
         m_Collider.enabled = true;
         m_RainEffect.Play();

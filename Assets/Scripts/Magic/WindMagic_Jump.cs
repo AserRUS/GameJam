@@ -18,6 +18,7 @@ public class WindMagic_Jump : Magic
     [SerializeField] private ParticleSystem m_WindEffect;
     [SerializeField] private LayerMask m_LayerMask;
 
+    [SerializeField] private SoundController m_SoundController;
 
 
     private void Update()
@@ -34,6 +35,7 @@ public class WindMagic_Jump : Magic
 
     public override void UseMagic()
     {
+        m_SoundController.Play();
         m_Player.velocity = new Vector3(m_Player.velocity.x, 0, m_Player.velocity.z);
         m_WindEffect.Play();
         StartCoroutine(MagicTimer());
@@ -42,6 +44,7 @@ public class WindMagic_Jump : Magic
     }
     public override void MagicReset()
     {
+        m_SoundController.Stop();
         m_WindEffect.Stop();
         enabled = false;
     }

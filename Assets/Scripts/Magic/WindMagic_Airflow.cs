@@ -20,6 +20,8 @@ public class WindMagic_Airflow : Magic
     [SerializeField] private Transform m_PlayerTransform;
     [SerializeField] private Collider m_Collider;
 
+    [SerializeField] private SoundController m_SoundController;
+
     private List<Rigidbody> objects = new List<Rigidbody>();
 
     private void FixedUpdate()
@@ -50,6 +52,7 @@ public class WindMagic_Airflow : Magic
     }
     public override void MagicReset()
     {
+        m_SoundController.Stop();
         m_WindEffect.Stop();
         objects.Clear();
         m_Collider.enabled = false;
@@ -57,6 +60,7 @@ public class WindMagic_Airflow : Magic
 
     public override void UseMagic()
     {
+        m_SoundController.Play();
         transform.position = m_PlayerTransform.position;
         transform.rotation = m_PlayerTransform.rotation;
         m_Collider.enabled = true;

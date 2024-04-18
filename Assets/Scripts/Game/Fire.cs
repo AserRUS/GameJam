@@ -13,8 +13,13 @@ public class Fire : MonoBehaviour
     [SerializeField] private ParticleSystem m_SteamParticleSystem;
     [SerializeField] private Collider m_Collider;
     [SerializeField] private float m_FireCoolDown;
+    [SerializeField] private SoundController m_SoundController;
 
     private float fireCoolDownTimer;
+    private void Start()
+    {
+        m_SoundController.Play();
+    }
     private void Update()
     {
         var startLifetime = m_FireParticleSystem.main;
@@ -66,6 +71,7 @@ public class Fire : MonoBehaviour
     
     public void StartReducingFire()
     {
+        m_SoundController.Stop();
         m_SmokeParticleSystem.Stop();
         m_SteamParticleSystem.Play();
     }
