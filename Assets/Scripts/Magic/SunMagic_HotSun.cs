@@ -46,13 +46,13 @@ public class SunMagic_HotSun : Magic
     protected void Update()
     {
         for (int i = 0; i < waterList.Count; i++)
-        {
+        {            
             waterList[i].RemoveWater(m_WaterEvaporationSpeed);
         }
     }
     public override void MagicReset()
     {
-        //m_SunEffect.Stop();
+        m_SunEffect.Stop();
         waterList.Clear();
         m_Collider.enabled = false;
     }
@@ -61,7 +61,7 @@ public class SunMagic_HotSun : Magic
     {
         transform.position = new Vector3(m_PlayerTransform.position.x, transform.position.y, m_PlayerTransform.position.z);
         m_Collider.enabled = true;
-        // m_SunEffect.Play();
+        m_SunEffect.Play();
         StartCoroutine(MagicTimer());
     }
     private IEnumerator MagicTimer()

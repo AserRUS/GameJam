@@ -41,4 +41,9 @@ public class RainMagic_HavyRain : RainMagic_Rain
             waterList[i].AddWater(m_WaterFillingSpeed);
         }
     }
+    public override void MagicReset()
+    {
+        base.MagicReset();
+        waterList.Clear();
+    }
 }

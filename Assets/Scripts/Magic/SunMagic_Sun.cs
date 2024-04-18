@@ -45,7 +45,7 @@ public class SunMagic_Sun : Magic
    
     public override void MagicReset()
     {
-        //m_SunEffect.Stop();
+        m_SunEffect.Stop();
         for (int i = 0; i < ropeList.Count; i++)
         {
             ropeList[i].RopeDestroy();
@@ -58,7 +58,7 @@ public class SunMagic_Sun : Magic
     {
         transform.position = new Vector3(m_PlayerTransform.position.x, transform.position.y, m_PlayerTransform.position.z);
         m_Collider.enabled = true;
-        // m_SunEffect.Play();
+        m_SunEffect.Play();
         StartCoroutine(MagicTimer());
     }
     private IEnumerator MagicTimer()
