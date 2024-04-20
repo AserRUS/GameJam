@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public event UnityAction OnJumpEvent;
     public event UnityAction OnRotationEvent;
-
+    public Vector3 Velocity => m_Rigidbody.velocity;
     public bool IsRotation => isRotation;
     public Rigidbody Rigidbody => m_Rigidbody;
     public float MaxSpeed => m_MaxSpeed;

@@ -16,6 +16,7 @@ public class MagicController : MonoBehaviour
 
     [SerializeField] private Magic[] m_RightButtonMagics;
     [SerializeField] private Magic[] m_LeftButtonMagics;
+    [SerializeField] private PlayerAnimationState m_AnimationState; 
 
     private MagicType currentMagicType;
     private Magic currentRightButtonMagic;
@@ -45,12 +46,14 @@ public class MagicController : MonoBehaviour
     public void UseRightButtonMagic()
     {
         if (isCoolDawn) return;
+        m_AnimationState.MagicAnimation();
         currentRightButtonMagic.UseMagic();
         CoolDown(currentRightButtonMagic.CoolDown);
     }
     public void UseLeftButtonMagic()
     {
         if (isCoolDawn) return;
+        m_AnimationState.MagicAnimation();
         currentLeftButtonMagic.UseMagic();
         CoolDown(currentLeftButtonMagic.CoolDown);
     }    
