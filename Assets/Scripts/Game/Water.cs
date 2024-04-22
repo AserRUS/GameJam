@@ -37,7 +37,7 @@ public class Water : MonoBehaviour
         if (rb != null)
         {
             rb.drag = 1;
-            rb.angularDrag = 1;
+            rb.angularDrag = 4;
             rigidbodies.Add(rb);
         }
     }
