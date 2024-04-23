@@ -24,13 +24,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float m_RayDistance;
     [SerializeField] private Vector3 m_RayOffset;
     [SerializeField] private LayerMask m_LayerMask;
+    [SerializeField] private int m_Direction = 1;
 
     [Header("Jump")]
     [SerializeField] private float m_JumpForce;
     [SerializeField] private float m_StunTime;
 
     private float m_DistanceToGround;  
-    private int direction = 1;
+    
     private bool isGround;
     private bool isWater;
     private bool isMove;
@@ -106,9 +107,9 @@ public class PlayerMovement : MonoBehaviour
         if (isMove == false) return;
         
         if (isGround)
-            m_Rigidbody.AddForce(direction * Vector3.right * m_GroundSpeed);
+            m_Rigidbody.AddForce(m_Direction * Vector3.right * m_GroundSpeed);
         else if (isGround == false && Mathf.Abs(m_Rigidbody.velocity.x) < m_MaxSpeed)
-            m_Rigidbody.AddForce(direction * Vector3.right * m_AirSpeed);
+            m_Rigidbody.AddForce(m_Direction * Vector3.right * m_AirSpeed);
     }
 
     private void Rotation()
@@ -138,27 +139,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void Resistance()
     {
-        if (isGround && m_Rigidbody.velocity.x * direction >= m_MaxSpeed && isGround)
+        if (isGround && m_Rigidbody.velocity.x * m_Direction >= m_MaxSpeed && isGround)
         {
-            m_Rigidbody.velocity = new Vector3(direction * m_MaxSpeed, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+            m_Rigidbody.velocity = new Vector3(m_Direction * m_MaxSpeed, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
         }  
     }
 
     public void RotateLeft()
     {
-        if (direction == -1) return;
+        if (m_Direction == -1) return;
         targetRotation = new Vector3(0, 180, 0);
         isRotation = true;
-        direction = -1;
+        m_Direction = -1;
 
         OnRotationEvent?.Invoke();
     }
     public void RotateRight()
     {
-        if (direction == 1) return;
+        if (m_Direction == 1) return;
         targetRotation = new Vector3(0, 0, 0);
         isRotation = true;
-        direction = 1;
+        m_Direction = 1;
 
         OnRotationEvent?.Invoke();
     }

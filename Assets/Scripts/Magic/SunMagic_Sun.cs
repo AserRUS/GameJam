@@ -23,7 +23,7 @@ public class SunMagic_Sun : Magic
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        Rope rope = other.transform.root.GetComponent<Rope>();        
+        Rope rope = other.transform.parent?.GetComponent<Rope>();        
         if (rope != null)
         {
             rope.LightTheRope();
@@ -33,7 +33,7 @@ public class SunMagic_Sun : Magic
 
     protected virtual void OnTriggerExit(Collider other)
     {
-        Rope rope = other.GetComponent<Rope>();
+        Rope rope = other.transform.parent?.GetComponent<Rope>();
         if (rope == null) return;
 
         if (ropeList.Contains(rope))
